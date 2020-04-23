@@ -47,6 +47,9 @@ pub struct LStar;
 #[derive(Debug)]
 pub struct SFMask;
 
+#[derive(Debug)]
+pub struct IA32ApicBase;
+
 impl Efer {
     /// The underlying model specific register.
     pub const MSR: Msr = Msr(0xC000_0080);
@@ -82,6 +85,11 @@ impl SFMask {
     pub const MSR: Msr = Msr(0xC000_0084);
 }
 
+impl IA32ApicBase {
+    /// The underlying model specific register.
+    pub const MSR: Msr = Msr(0x0000_001B);
+}
+
 bitflags! {
     /// Flags of the Extended Feature Enable Register.
     pub struct EferFlags: u64 {
@@ -104,10 +112,21 @@ bitflags! {
     }
 }
 
+bitflags! {
+    pub struct IA32ApicBaseFlags: u64 {
+        /// APIC global enable/disable
+        const APIC_GLOBAL_ENABLE = 1 << 11;
+
+        /// Processor is BSP
+        const APIC_BSP = 1 << 8;
+    }
+}
+
 #[cfg(target_arch = "x86_64")]
 mod x86_64 {
     use super::*;
     use crate::addr::VirtAddr;
+    use crate::PhysAddr;
 
     impl Msr {
         /// Read 64 bits msr register.
@@ -147,6 +166,20 @@ mod x86_64 {
             #[cfg(not(feature = "inline_asm"))]
             crate::asm::x86_64_asm_wrmsr(self.0, value);
         }
+    }
+
+    impl IA32ApicBase {
+        pub fn read_apic_base_addr() -> PhysAddr {
+            PhysAddr::new((Self::read_raw() & 0xFFFF_F000))
+        }
+
+        pub fn read() -> IA32ApicBaseFlags {
+            unsafe {
+                IA32ApicBaseFlags::from_bits_truncate(Self::read_raw())
+            }
+        }
+
+        pub fn read_raw() -> u64 { unsafe { Self::MSR.read() } }
     }
 
     impl Efer {
