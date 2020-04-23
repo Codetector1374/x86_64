@@ -605,7 +605,7 @@ impl<F> Entry<F> {
     /// further customization.
     #[cfg(target_arch = "x86_64")]
     #[inline]
-    fn set_handler_addr(&mut self, addr: u64) -> &mut EntryOptions {
+    pub fn set_handler_addr(&mut self, addr: u64) -> &mut EntryOptions {
         use crate::instructions::segmentation;
 
         self.pointer_low = addr as u16;
