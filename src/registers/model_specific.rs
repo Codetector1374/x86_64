@@ -47,6 +47,7 @@ pub struct LStar;
 #[derive(Debug)]
 pub struct SFMask;
 
+/// APIC Base Address Register: IA32_APIC_BASE
 #[derive(Debug)]
 pub struct IA32ApicBase;
 
@@ -113,6 +114,7 @@ bitflags! {
 }
 
 bitflags! {
+    /// Apic base Flags
     pub struct IA32ApicBaseFlags: u64 {
         /// APIC global enable/disable
         const APIC_GLOBAL_ENABLE = 1 << 11;
@@ -169,16 +171,17 @@ mod x86_64 {
     }
 
     impl IA32ApicBase {
+        /// Read the physical address of the APIC map
         pub fn read_apic_base_addr() -> PhysAddr {
-            PhysAddr::new((Self::read_raw() & 0xFFFF_F000))
+            PhysAddr::new(Self::read_raw() & 0xFFFF_F000)
         }
 
+        /// Read the flags part of the APIC Base Register
         pub fn read() -> IA32ApicBaseFlags {
-            unsafe {
-                IA32ApicBaseFlags::from_bits_truncate(Self::read_raw())
-            }
+            IA32ApicBaseFlags::from_bits_truncate(Self::read_raw())
         }
 
+        /// Read the Raw Value as a u64
         pub fn read_raw() -> u64 { unsafe { Self::MSR.read() } }
     }
 
