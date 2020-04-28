@@ -1,3 +1,7 @@
+
+//! Cache related instructions
+
+/// Invalid all data cache (Flush)
 #[inline]
 pub fn wbinvd() {
     #[cfg(feature = "inline_asm")]
