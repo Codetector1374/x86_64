@@ -8,6 +8,7 @@ pub mod random;
 pub mod segmentation;
 pub mod tables;
 pub mod tlb;
+pub mod cache;
 
 /// Halts the CPU until the next interrupt arrives.
 #[inline]
