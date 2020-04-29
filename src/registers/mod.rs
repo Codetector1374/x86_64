@@ -18,3 +18,16 @@ pub fn read_rip() -> u64 {
     }
     rip
 }
+
+/// Get the current rsp value
+#[cfg(feature = "inline_asm")]
+#[inline(always)]
+pub fn read_rsp() -> u64 {
+    let rsp: u64;
+    unsafe {
+       asm!(
+       "mov $0, rsp":"=r"(rsp):::"volatile", "intel"
+       );
+    }
+    rsp
+}
