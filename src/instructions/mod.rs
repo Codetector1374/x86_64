@@ -9,6 +9,7 @@ pub mod segmentation;
 pub mod tables;
 pub mod tlb;
 pub mod cache;
+pub mod cpuid;
 
 /// Halts the CPU until the next interrupt arrives.
 #[inline]
