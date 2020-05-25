@@ -1,3 +1,5 @@
+//! CPUID Instructions
+
 /// Get the MFG String
 #[inline]
 pub fn mfgid() -> [u8; 12] {
