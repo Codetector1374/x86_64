@@ -25,7 +25,7 @@ pub fn read_rip() -> u64 {
 pub fn read_rsp() -> u64 {
     let rsp: u64;
     unsafe {
-       asm!(
+       llvm_asm!(
        "mov $0, rsp":"=r"(rsp):::"volatile", "intel"
        );
     }
