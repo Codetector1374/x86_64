@@ -16,7 +16,7 @@ pub mod cpuid;
 pub fn hlt() {
     #[cfg(feature = "inline_asm")]
     unsafe {
-        asm!("hlt" :::: "volatile");
+        llvm_asm!("hlt" :::: "volatile");
     }
 
     #[cfg(not(feature = "inline_asm"))]
@@ -31,6 +31,6 @@ pub fn hlt() {
 #[inline]
 pub fn bochs_breakpoint() {
     unsafe {
-        asm!("xchgw %bx, %bx" :::: "volatile");
+        llvm_asm!("xchgw %bx, %bx" :::: "volatile");
     }
 }

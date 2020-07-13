@@ -142,7 +142,7 @@ mod x86_64 {
             #[cfg(feature = "inline_asm")]
             {
                 let (high, low): (u32, u32);
-                asm!("rdmsr" : "={eax}" (low), "={edx}" (high) : "{ecx}" (self.0) : "memory" : "volatile");
+                llvm_asm!("rdmsr" : "={eax}" (low), "={edx}" (high) : "{ecx}" (self.0) : "memory" : "volatile");
                 ((high as u64) << 32) | (low as u64)
             }
 
@@ -162,7 +162,7 @@ mod x86_64 {
             {
                 let low = value as u32;
                 let high = (value >> 32) as u32;
-                asm!("wrmsr" :: "{ecx}" (self.0), "{eax}" (low), "{edx}" (high) : "memory" : "volatile" );
+                llvm_asm!("wrmsr" :: "{ecx}" (self.0), "{eax}" (low), "{edx}" (high) : "memory" : "volatile" );
             }
 
             #[cfg(not(feature = "inline_asm"))]
@@ -324,10 +324,10 @@ mod x86_64 {
         ) {
             let raw = Self::read_raw();
             (
-                SegmentSelector((raw.0 + 16).try_into().unwrap()),
-                SegmentSelector((raw.0 + 8).try_into().unwrap()),
-                SegmentSelector((raw.1).try_into().unwrap()),
-                SegmentSelector((raw.1 + 8).try_into().unwrap()),
+                SegmentSelector(raw.0 + 16),
+                SegmentSelector(raw.0 + 8),
+                SegmentSelector(raw.1),
+                SegmentSelector(raw.1 + 8),
             )
         }
 
