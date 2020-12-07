@@ -9,7 +9,7 @@ pub fn mfgid() -> [u8; 12] {
     let edx: u32;
     let mode = 0;
     unsafe {
-        llvm_asm!("cpuid" :"={ebx}"(ebx), "={ecx}"(ecx), "={edx}"(edx):"rax"(mode)::"volatile");
+        asm!("cpuid", out("ebx") ebx, out("ecx") ecx, out("edx") edx, in("eax") mode, options(nomem, nostack));
     }
     #[cfg(not(feature = "inline_asm"))]
         unsafe {

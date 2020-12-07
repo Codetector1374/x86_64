@@ -6,7 +6,7 @@
 pub fn wbinvd() {
     #[cfg(feature = "inline_asm")]
     unsafe {
-        llvm_asm!("wbinvd" :::: "volatile");
+        asm!("wbinvd", options(nostack, nomem));
     }
     #[cfg(not(feature = "inline_asm"))]
     unsafe {
